@@ -1,11 +1,14 @@
 package com.lebahmadu.app
 
 import android.annotation.SuppressLint
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.VpnService
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, R.string.vpn_permission_denied, Toast.LENGTH_LONG).show()
             }
+        }
+
+    // Izin notifikasi (Android 13+). Apa pun hasilnya, DNS tetap lanjut dinyalakan.
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            startDnsFlow()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +145,18 @@ class MainActivity : AppCompatActivity() {
             DnsVpnService.stop(this)
             return
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+        startDnsFlow()
+    }
+
+    private fun startDnsFlow() {
+        if (DnsVpnService.running.value) return
         // Shows the system "Connection request" dialog the first time.
         val consentIntent = VpnService.prepare(this)
         if (consentIntent != null) vpnPermissionLauncher.launch(consentIntent)

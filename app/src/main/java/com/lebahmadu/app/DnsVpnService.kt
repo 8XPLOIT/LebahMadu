@@ -1,8 +1,14 @@
 package com.lebahmadu.app
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.net.VpnService
+import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.system.ErrnoException
 import android.system.Os
@@ -41,6 +47,9 @@ class DnsVpnService : VpnService() {
 
     companion object {
         private const val TAG = "DnsVpnService"
+        private const val ACTION_STOP = "com.lebahmadu.app.action.STOP_VPN"
+        private const val CHANNEL_ID = "lebahmadu_status"
+        private const val NOTIF_ID = 1001
         private const val VPN_ADDRESS = "10.111.222.1"
         private const val VIRTUAL_DNS = "10.111.222.2"
         private const val MTU = 1500
@@ -79,6 +88,12 @@ class DnsVpnService : VpnService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == ACTION_STOP) {
+            // Tombol "Matikan" di notifikasi.
+            stopVpn()
+            stopSelf()
+            return START_NOT_STICKY
+        }
         startVpn()
         return START_STICKY
     }
@@ -119,6 +134,7 @@ class DnsVpnService : VpnService() {
             executor = Executors.newFixedThreadPool(4)
             reader = thread(name = "dns-vpn-reader", isDaemon = true) { readLoop(pfd) }
             _running.value = true
+            showNotification()
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start VPN", e)
             stopVpn()
@@ -130,6 +146,7 @@ class DnsVpnService : VpnService() {
     private fun stopVpn() {
         active = false
         _running.value = false
+        hideNotification()
         reader?.interrupt()
         reader = null
         executor?.shutdownNow()
@@ -139,6 +156,71 @@ class DnsVpnService : VpnService() {
         } catch (e: IOException) {
         }
         tun = null
+    }
+
+    // --------------------------------------------------------- notification
+
+    private fun showNotification() {
+        try {
+            val nm = getSystemService(NotificationManager::class.java) ?: return
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                nm.createNotificationChannel(
+                    NotificationChannel(
+                        CHANNEL_ID,
+                        getString(R.string.notif_channel_name),
+                        NotificationManager.IMPORTANCE_LOW
+                    ).apply { setShowBadge(false) }
+                )
+            }
+
+            val immutable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+
+            val openIntent = packageManager.getLaunchIntentForPackage(packageName)
+            val openPending = openIntent?.let {
+                PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_UPDATE_CURRENT or immutable)
+            }
+
+            val stopPending = PendingIntent.getService(
+                this, 1,
+                Intent(this, DnsVpnService::class.java).setAction(ACTION_STOP),
+                PendingIntent.FLAG_UPDATE_CURRENT or immutable
+            )
+
+            val builder = createBuilder()
+
+            val notification = builder
+                .setSmallIcon(R.drawable.ic_stat_honey)
+                .setContentTitle(getString(R.string.notif_title))
+                .setContentText(getString(R.string.notif_text))
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(openPending)
+                .addAction(
+                    Notification.Action.Builder(
+                        Icon.createWithResource(this, R.drawable.ic_stat_honey),
+                        getString(R.string.notif_action_stop),
+                        stopPending
+                    ).build()
+                )
+                .build()
+
+            nm.notify(NOTIF_ID, notification)
+        } catch (e: Exception) {
+            // Notifikasi hanya pelengkap; jangan sampai menggagalkan VPN.
+            Log.w(TAG, "Failed to show notification: ${e.message}")
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun createBuilder(): Notification.Builder =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Notification.Builder(this, CHANNEL_ID)
+        else Notification.Builder(this)
+
+    private fun hideNotification() {
+        try {
+            getSystemService(NotificationManager::class.java)?.cancel(NOTIF_ID)
+        } catch (e: Exception) {
+        }
     }
 
     // ---------------------------------------------------------- packet loop

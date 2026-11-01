@@ -22,4 +22,8 @@
     <string name="vpn_permission_denied">Izin VPN diperlukan untuk mengaktifkan DNS Pribadi.</string>
     <string name="web_error">Halaman tidak dapat dimuat. Periksa koneksi Anda.</string>
     <string name="retry">Coba Lagi</string>
+    <string name="notif_channel_name">Status Lebah Madu</string>
+    <string name="notif_title">Lebah Madu On Bosku!</string>
+    <string name="notif_text">DNS/VPN sedang aktif. Ketuk Matikan untuk menonaktifkan.</string>
+    <string name="notif_action_stop">Matikan</string>
 </resources>

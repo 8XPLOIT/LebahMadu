@@ -14,7 +14,7 @@
 
     <style name="Theme.LebahMadu.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/zinc_950</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_honey</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_bee_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.LebahMadu</item>
     </style>
 </resources>
