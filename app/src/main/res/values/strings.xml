@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lebah Madu</string>
-    <string name="login_subtitle">Masukkan kode login untuk melanjutkan</string>
-    <string name="login_hint">Kode Login</string>
-    <string name="login_submit">Masuk</string>
-    <string name="login_empty">Silakan masukkan kode login</string>
-    <string name="login_invalid">Kode login tidak valid</string>
+    <string name="app_name">Lebah Madu 18+</string>
+    <string name="login_subtitle">Masukkan kode login untuk melanjutkan. Pastikan umur anda diatas 18+ ya!</string>
+    <string name="login_hint">Ketik kode login disini...</string>
+    <string name="login_submit">MASUK</string>
+    <string name="login_empty">Silakan masukkan kode login!</string>
+    <string name="login_invalid">Kode login tidak valid atau akun anda Expired. Hubungi Kapten Nemo!</string>
     <string name="login_disabled">Login sedang dinonaktifkan oleh Administrator</string>
     <string name="session_expired">Kode login sudah tidak berlaku. Silakan login kembali.</string>
     <string name="err_no_internet">Tidak ada koneksi internet. Periksa jaringan Anda lalu coba lagi.</string>
