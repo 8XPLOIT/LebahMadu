@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.LebahMadu" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/red_600</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/red_600</item>
+        <item name="android:colorBackground">@color/zinc_950</item>
+        <item name="android:windowBackground">@color/zinc_950</item>
+        <item name="colorSurface">@color/zinc_950</item>
+        <item name="colorOnSurface">@color/zinc_100</item>
+        <item name="colorOnSurfaceVariant">@color/zinc_400</item>
+        <item name="colorOutline">@color/zinc_700</item>
+    </style>
+
+    <style name="Theme.LebahMadu.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/zinc_950</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_bee_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.LebahMadu</item>
+    </style>
+</resources>
