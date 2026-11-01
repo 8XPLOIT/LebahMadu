@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lebah Madu</string>
+    <string name="login_subtitle">Enter your login code to continue</string>
+    <string name="login_hint">Login Code</string>
+    <string name="login_submit">Submit</string>
+    <string name="login_empty">Please enter your login code</string>
+    <string name="login_invalid">Invalid login code</string>
+    <string name="login_disabled">Login is currently disabled by Administrator</string>
+    <string name="err_no_internet">No internet connection. Please check your network and try again.</string>
+    <string name="err_timeout">Connection timed out. Please try again.</string>
+    <string name="err_network">Network error. Please try again.</string>
+    <string name="err_server">Server error (HTTP %1$d). Please try again later.</string>
+    <string name="err_config">Invalid configuration received from the server.</string>
+    <string name="dns_on">Private DNS: ON</string>
+    <string name="dns_off">Private DNS: OFF</string>
+    <string name="logout">Logout</string>
+    <string name="vpn_permission_denied">VPN permission is required to enable Private DNS.</string>
+    <string name="web_error">Can\'t reach the page. Check your connection.</string>
+    <string name="retry">Retry</string>
+</resources>
