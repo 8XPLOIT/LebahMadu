@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.8"
+        android:scaleY="0.8">
+        <!-- honey pool with two drips -->
+        <path
+            android:fillColor="#F59E0B"
+            android:pathData="M30,38 C30,30 38,28 44,32 C50,26 62,26 68,32 C74,30 80,34 78,42 C77,48 70,50 66,48 L66,58 C66,64 60,64 60,58 L60,50 C56,52 52,52 48,50 L48,66 C48,74 40,74 40,66 L40,50 C34,50 30,46 30,38 Z" />
+        <!-- highlight -->
+        <path
+            android:fillColor="#FDE68A"
+            android:pathData="M36,36 C36,33 40,32 44,34 C41,36 38,38 36,36 Z" />
+        <!-- falling drop -->
+        <path
+            android:fillColor="#F59E0B"
+            android:pathData="M44,78 C44,78 38,85 38,89 C38,92.5 40.7,95 44,95 C47.3,95 50,92.5 50,89 C50,85 44,78 44,78 Z" />
+    </group>
+</vector>
