@@ -11,7 +11,7 @@ Struktur repo (semuanya di root repo GitHub Anda):
 1. Upload semua isi folder ini ke repo GitHub (branch `main`).
 2. Settings > Pages > Deploy from a branch > `main` / `(root)`.
 3. Tab Actions > "Build APK" > Run workflow. Unduh APK dari bagian Artifacts.
-   (URL config.json dan index.html diisi otomatis dari nama repo.)
+   (URL sudah diatur ke github.com/8xploit/LebahMadu di AppConfig.kt.)
 
 ## Administrator
 Edit `config.json` langsung di GitHub:

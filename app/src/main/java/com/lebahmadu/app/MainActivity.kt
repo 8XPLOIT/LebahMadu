@@ -93,10 +93,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupControls() {
         binding.btnDns.setOnClickListener { toggleDns() }
+        binding.btnRefresh.setOnClickListener { refreshPage() }
         binding.btnLogout.setOnClickListener { logout() }
         binding.btnRetry.setOnClickListener {
             binding.errorGroup.visibility = View.GONE
             binding.webView.loadUrl(binding.webView.url ?: AppConfig.WEB_URL)
+        }
+    }
+
+    /** Memuat ulang halaman yang sedang tampil (mis. halaman video setelah pengalihan). */
+    private fun refreshPage() {
+        binding.errorGroup.visibility = View.GONE
+        val current = binding.webView.url
+        if (current.isNullOrEmpty() || current == "about:blank") {
+            binding.webView.loadUrl(AppConfig.WEB_URL)
+        } else {
+            binding.webView.reload()
         }
     }
 

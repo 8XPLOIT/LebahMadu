@@ -21,16 +21,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Isi URL otomatis dari repo ini
-        run: |
-          OWNER="${GITHUB_REPOSITORY_OWNER}"
-          REPO="${GITHUB_REPOSITORY#*/}"
-          OWNER_LC="$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')"
-          F=app/src/main/java/com/lebahmadu/app/AppConfig.kt
-          sed -i "s#raw.githubusercontent.com/USERNAME/REPO/#raw.githubusercontent.com/${OWNER}/${REPO}/#" "$F"
-          sed -i "s#USERNAME.github.io/REPO/#${OWNER_LC}.github.io/${REPO}/#" "$F"
-          grep -n "https://" "$F"
-
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
