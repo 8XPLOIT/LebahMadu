@@ -1,14 +1,23 @@
 package com.lebahmadu.app
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -56,6 +65,35 @@ class LoginActivity : AppCompatActivity() {
             } else false
         }
         binding.btnSubmit.setOnClickListener { attemptLogin() }
+        setupBuyLicense()
+    }
+
+    /** "Belum punya kode login? Beli Lisensi DISINI." - bagian link membuka halaman pembelian. */
+    private fun setupBuyLicense() {
+        val prefix = getString(R.string.login_buy_prefix)
+        val link = getString(R.string.login_buy_link)
+        val text = SpannableString(prefix + link)
+        val span = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                try {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.login_buy_url)))
+                    )
+                } catch (e: ActivityNotFoundException) {
+                    toast(getString(R.string.err_network))
+                }
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.color = ContextCompat.getColor(this@LoginActivity, R.color.honey_400)
+                ds.isUnderlineText = true
+                ds.isFakeBoldText = true
+            }
+        }
+        text.setSpan(span, prefix.length, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.tvBuyLicense.text = text
+        binding.tvBuyLicense.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvBuyLicense.highlightColor = Color.TRANSPARENT
     }
 
     private fun attemptLogin() {
@@ -101,7 +139,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setLoading(loading: Boolean) {
-        binding.progress.visibility = if (loading) android.view.View.VISIBLE else android.view.View.GONE
+        binding.progress.visibility = if (loading) View.VISIBLE else View.GONE
         binding.btnSubmit.isEnabled = !loading
         binding.etCode.isEnabled = !loading
     }

@@ -72,6 +72,16 @@
                 android:textAllCaps="false"
                 android:textSize="16sp" />
 
+            <!-- Beli lisensi -->
+            <TextView
+                android:id="@+id/tvBuyLicense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="@color/zinc_400"
+                android:textSize="13sp" />
+
             <!-- Peringatan umur -->
             <TextView
                 android:id="@+id/tvWarning"

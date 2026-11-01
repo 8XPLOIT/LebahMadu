@@ -26,4 +26,7 @@
     <string name="notif_title">Lebah Madu On Bosku!</string>
     <string name="notif_text">DNS/VPN sedang aktif. Ketuk Matikan untuk menonaktifkan.</string>
     <string name="notif_action_stop">Matikan</string>
+    <string name="login_buy_prefix">Belum punya kode login? </string>
+    <string name="login_buy_link">Beli Lisensi DISINI.</string>
+    <string name="login_buy_url" translatable="false">http://lynk.id/nemospiritgeek/yzkn3dy9nm45</string>
 </resources>
