@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lebah Madu 18+</string>
-    <string name="login_subtitle">Masukkan kode login untuk melanjutkan. Pastikan umur anda diatas 18+ ya!</string>
+    <string name="app_name">Lebah Madu</string>
+    <string name="login_subtitle">Masukkan kode login untuk melanjutkan!</string>
     <string name="login_hint">Kode Login</string>
     <string name="login_submit">MASUK</string>
-    <string name="login_warning">Peringatan: Pastikan Umur Anda Sudah 18+ Untuk Melanjutkan!</string>
-    <string name="footer_credit">Build by 8XPLOIT</string>
+    <string name="login_warning">Peringatan Sangat Keras : Pastikan Umur Anda Sudah Diatas 18+ Untuk Melanjutkan!</string>
+    <string name="footer_credit">Powered by 8XPLOIT</string>
     <string name="login_empty">Silakan masukkan kode login</string>
-    <string name="login_invalid">Kode login tidak valid atau akun anda Expired. Hubungi Kapten Nemo!</string>
+    <string name="login_invalid">Kode login anda salah atau akun anda telah Expired. Hubungi Kapten Nemo!</string>
     <string name="login_disabled">Login sedang dinonaktifkan oleh Administrator</string>
     <string name="session_expired">Kode login sudah tidak berlaku. Silakan login kembali.</string>
     <string name="err_no_internet">Tidak ada koneksi internet. Periksa jaringan Anda lalu coba lagi.</string>
@@ -15,8 +15,8 @@
     <string name="err_network">Terjadi kesalahan jaringan. Silakan coba lagi.</string>
     <string name="err_server">Kesalahan server (HTTP %1$d). Coba lagi nanti.</string>
     <string name="err_config">Konfigurasi dari server tidak valid.</string>
-    <string name="dns_on">VPN : ON</string>
-    <string name="dns_off">VPN : OFF</string>
+    <string name="dns_on">VPN : On</string>
+    <string name="dns_off">VPN : Off</string>
     <string name="refresh">Refresh</string>
     <string name="logout">Keluar</string>
     <string name="vpn_permission_denied">Izin VPN diperlukan untuk mengaktifkan DNS Pribadi.</string>
