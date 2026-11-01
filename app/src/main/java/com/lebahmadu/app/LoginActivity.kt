@@ -71,19 +71,22 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val result = ConfigRepository.fetch()
             setLoading(false)
+            handleResult(code, result)
+        }
+    }
 
-            when (result) {
-                is ConfigResult.Failure -> toast(errorMessage(result))
-                is ConfigResult.Success -> {
-                    val config = result.config
-                    when {
-                        !config.loginEnabled -> toast(getString(R.string.login_disabled))
-                        code in config.codes -> {
-                            SessionManager.saveSession(this@LoginActivity, code)
-                            openMain()
-                        }
-                        else -> binding.tilCode.error = getString(R.string.login_invalid)
-                    }
+    private fun handleResult(code: String, result: ConfigResult) {
+        when (result) {
+            is ConfigResult.Failure -> toast(errorMessage(result))
+            is ConfigResult.Success -> {
+                val config = result.config
+                if (!config.loginEnabled) {
+                    toast(getString(R.string.login_disabled))
+                } else if (code in config.codes) {
+                    SessionManager.saveSession(this, code)
+                    openMain()
+                } else {
+                    binding.tilCode.error = getString(R.string.login_invalid)
                 }
             }
         }

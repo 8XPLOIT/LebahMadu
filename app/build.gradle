@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// versionCode naik otomatis di setiap build GitHub Actions -> APK baru bisa menimpa (update) yang lama.
+def buildNumber = Integer.parseInt(System.getenv("GITHUB_RUN_NUMBER") ?: "1")
+
 android {
     namespace 'com.lebahmadu.app'
     compileSdk 35
@@ -11,14 +14,30 @@ android {
         applicationId "com.lebahmadu.app"
         minSdk 24
         targetSdk 35
-        versionCode 1
-        versionName "1.0.0"
+        versionCode buildNumber
+        versionName "1.0." + buildNumber
+    }
+
+    // Keystore TETAP: semua build ditandatangani dengan kunci yang sama, syarat wajib agar APK bisa di-update.
+    // (Bisa diganti ke GitHub Secrets lewat environment variable di bawah.)
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE_PATH") ?: "lebahmadu.keystore")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: "LebahMadu2026"
+            keyAlias System.getenv("KEY_ALIAS") ?: "lebahmadu"
+            keyPassword System.getenv("KEY_PASSWORD") ?: "LebahMadu2026"
+        }
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

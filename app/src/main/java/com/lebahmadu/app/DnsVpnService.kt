@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
+import android.system.ErrnoException
+import android.system.Os
+import android.system.OsConstants
+import android.system.StructPollfd
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,6 +66,9 @@ class DnsVpnService : VpnService() {
     private var reader: Thread? = null
     private var executor: ExecutorService? = null
 
+    /** Status instance ini (bukan global), agar thread lama tidak mengganggu instance baru. */
+    @Volatile private var active = false
+
     private val http: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .dns(BootstrapDns)
@@ -108,6 +115,7 @@ class DnsVpnService : VpnService() {
                 return
             }
             tun = pfd
+            active = true
             executor = Executors.newFixedThreadPool(4)
             reader = thread(name = "dns-vpn-reader", isDaemon = true) { readLoop(pfd) }
             _running.value = true
@@ -120,6 +128,7 @@ class DnsVpnService : VpnService() {
 
     @Synchronized
     private fun stopVpn() {
+        active = false
         _running.value = false
         reader?.interrupt()
         reader = null
@@ -135,19 +144,37 @@ class DnsVpnService : VpnService() {
     // ---------------------------------------------------------- packet loop
 
     private fun readLoop(pfd: ParcelFileDescriptor) {
-        val input = FileInputStream(pfd.fileDescriptor)
-        val output = FileOutputStream(pfd.fileDescriptor)
+        val fdObj = pfd.fileDescriptor
+        val input = FileInputStream(fdObj)
+        val output = FileOutputStream(fdObj)
         val buffer = ByteArray(32767)
+        val pollFd = StructPollfd().apply {
+            fd = fdObj
+            events = OsConstants.POLLIN.toShort()
+        }
+        val errorMask = OsConstants.POLLERR or OsConstants.POLLHUP or OsConstants.POLLNVAL
         try {
-            while (!Thread.currentThread().isInterrupted) {
+            // poll() dengan timeout 500 ms: loop selalu bisa berhenti saat DNS dimatikan.
+            while (active && !Thread.currentThread().isInterrupted) {
+                pollFd.revents = 0
+                val ready = try {
+                    Os.poll(arrayOf(pollFd), 500)
+                } catch (e: ErrnoException) {
+                    if (e.errno == OsConstants.EINTR) continue else break
+                }
+                if (ready <= 0) continue
+                val events = pollFd.revents.toInt()
+                if (events and errorMask != 0) break
+                if (events and OsConstants.POLLIN == 0) continue
+
                 val length = input.read(buffer)
                 if (length < 0) break
                 if (length > 0) handlePacket(buffer, length, output)
             }
         } catch (e: IOException) {
-            if (_running.value) Log.w(TAG, "TUN read ended: ${e.message}")
+            if (active) Log.w(TAG, "TUN read ended: ${e.message}")
         } finally {
-            if (_running.value) stopSelf() // ended unexpectedly
+            if (active) stopSelf() // berhenti tak terduga
         }
     }
 
