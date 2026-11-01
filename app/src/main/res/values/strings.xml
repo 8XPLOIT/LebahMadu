@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lebah Madu</string>
-    <string name="login_subtitle">Masukkan kode login untuk melanjutkan!</string>
+    <string name="login_subtitle">Masukkan kode login untuk melanjutkan! Belum punya kode login? Hubungi admin di WhatsApp 082339800565 :)</string>
     <string name="login_hint">Kode Login</string>
     <string name="login_submit">MASUK</string>
     <string name="login_warning">Peringatan Sangat Keras : Pastikan Umur Anda Sudah Diatas 18+ Untuk Melanjutkan!</string>
@@ -26,7 +26,11 @@
     <string name="notif_title">Lebah Madu On Bosku!</string>
     <string name="notif_text">DNS/VPN sedang aktif. Ketuk Matikan untuk menonaktifkan.</string>
     <string name="notif_action_stop">Matikan</string>
+<<<<<<< HEAD
     <string name="login_buy_prefix">Belum punya kode login? </string>
     <string name="login_buy_link">Beli Lisensi DISINI.</string>
     <string name="login_buy_url" translatable="false">http://lynk.id/nemospiritgeek/yzkn3dy9nm45</string>
 </resources>
+=======
+</resources>
+>>>>>>> 533a2b36cff5553c7106c930b294bae352f0b726
