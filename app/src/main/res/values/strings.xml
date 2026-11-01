@@ -13,8 +13,8 @@
     <string name="err_network">Terjadi kesalahan jaringan. Silakan coba lagi.</string>
     <string name="err_server">Kesalahan server (HTTP %1$d). Coba lagi nanti.</string>
     <string name="err_config">Konfigurasi dari server tidak valid.</string>
-    <string name="dns_on">DNS Pribadi: AKTIF</string>
-    <string name="dns_off">DNS Pribadi: MATI</string>
+    <string name="dns_on">DNS: AKTIF</string>
+    <string name="dns_off">DNS: MATI</string>
     <string name="logout">Logout</string>
     <string name="vpn_permission_denied">Izin VPN diperlukan untuk mengaktifkan DNS Pribadi.</string>
     <string name="web_error">Halaman tidak dapat dimuat. Periksa koneksi Anda.</string>
