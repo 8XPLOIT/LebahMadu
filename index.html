@@ -8,23 +8,30 @@
     <!-- Pengalihan otomatis dalam 30 detik -->
     <meta http-equiv="refresh" content="30; url=https://jwplyr.com/f/46xqz17b0gk">
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
         /* Menggunakan font modern bawaan sistem (seperti Apple/iOS) */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;   /* cadangan untuk browser lama */
+            min-height: 100dvh;  /* tinggi layar HP yang sebenarnya */
             margin: 0;
+            padding: 1rem 0;     /* ruang atas-bawah supaya konten tidak mepet saat di-scroll */
+            box-sizing: border-box;
             background-color: #09090b; /* Deep black (zinc-950) */
             color: #ffffff;
             position: relative;
-            overflow: hidden; /* Mencegah scroll karena efek blur background */
+            overflow-x: hidden;  /* hanya blokir geser samping; layar boleh di-scroll ke bawah */
         }
 
         /* Efek Glow Merah di Belakang Kaca (Glassmorphism Ambient) */
         .glow-1 {
-            position: absolute;
+            position: fixed;
             top: 20%;
             left: 30%;
             width: 300px;
@@ -33,10 +40,11 @@
             border-radius: 50%;
             filter: blur(80px);
             z-index: 0;
+            pointer-events: none;
         }
 
         .glow-2 {
-            position: absolute;
+            position: fixed;
             bottom: 20%;
             right: 30%;
             width: 250px;
@@ -45,6 +53,7 @@
             border-radius: 50%;
             filter: blur(100px);
             z-index: 0;
+            pointer-events: none;
         }
 
         /* Card Frosted Glass */
@@ -55,47 +64,50 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            padding: 2.5rem 2rem;
-            border-radius: 1.5rem;
+            padding: clamp(1.25rem, 5vw, 2.5rem) clamp(1rem, 4.5vw, 2rem);
+            border-radius: 1.25rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            
+
             /* Penyesuaian agar tidak merapat ke tepi */
-            box-sizing: border-box; /* Memastikan padding tidak menambah ukuran lebar */
+            box-sizing: border-box;
             max-width: 400px;
-            width: 85%; /* Sedikit dikurangi dari 90% agar ada ruang kosong di kiri-kanan */
+            width: 92%;
             margin: 0 auto;
-            
+
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         /* Tipografi */
         h2 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.5rem;
+            margin: 0 0 0.4rem 0;
+            font-size: clamp(1.1rem, 5.5vw, 1.5rem);
             font-weight: 600;
             letter-spacing: -0.025em;
         }
 
         p {
-            margin: 0 0 2rem 0;
+            margin: 0 0 clamp(1rem, 4vw, 1.5rem) 0;
             color: #a1a1aa; /* Muted gray (zinc-400) */
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: clamp(0.75rem, 3.4vw, 0.9rem);
+            line-height: 1.45;
         }
 
-        /* Tombol Aksen Merah Minimalis */
+        /* Tombol Aksen Merah Minimalis (ukuran kecil & responsif) */
         a.btn {
-            display: inline-flex;
+            display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
+            min-height: 2.5rem;  /* tetap nyaman disentuh jari */
             background-color: #dc2626; /* Solid Red */
             color: #ffffff;
             text-decoration: none;
-            padding: 0.875rem 1.5rem;
-            border-radius: 0.75rem; /* Agak membulat ala iOS */
+            text-align: center;
+            line-height: 1.15;
+            padding: 0.5rem 0.5rem;
+            border-radius: 0.6rem; /* Agak membulat ala iOS */
             font-weight: 600;
-            font-size: 1rem;
+            font-size: clamp(0.7rem, 3.3vw, 0.875rem);
             transition: all 0.2s ease-in-out;
             box-sizing: border-box;
         }
@@ -104,12 +116,27 @@
             background-color: #b91c1c; /* Merah gelap saat di-hover */
             transform: translateY(-2px);
         }
-        
-        /* Kelompok tombol (lebih dari 2 tombol masuk) */
+
+        a.btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Kelompok tombol: 2 kolom supaya lebih pendek, tombol pertama selebar penuh */
         .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .btn-group a.btn:first-child {
+            grid-column: 1 / -1;
+            min-height: 2.75rem;
+            font-size: clamp(0.78rem, 3.6vw, 0.95rem);
+        }
+
+        /* Jika jumlah tombol genap, tombol terakhir yang sendirian dibuat selebar penuh */
+        .btn-group a.btn:last-child:nth-child(even) {
+            grid-column: 1 / -1;
         }
 
         /* Tombol cadangan: kaca transparan dengan garis merah */
@@ -122,15 +149,22 @@
             background-color: rgba(220, 38, 38, 0.35);
         }
 
+        /* Layar sangat kecil: tombol jadi 1 kolom penuh agar teks tidak terpotong */
+        @media (max-width: 300px) {
+            .btn-group {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
         /* Loading Spinner Sederhana */
         .spinner {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
-            margin: 0 auto 1.5rem auto;
+            margin: 0 auto 1rem auto;
         }
 
         @keyframes spin {
@@ -149,15 +183,15 @@
         <h2>LOGIN SUKSES!</h2>
         <p>Setelah masuk, jangan lupa aktifkan tombol VPN di kiri atas supaya tidak ada iklan. Pilih salah satu server di bawah, atau Anda akan dialihkan otomatis ke SERVER 1 dalam beberapa detik!</p>
         <div class="btn-group">
-            <!-- Ganti href tombol 2 dan 3 dengan link server cadangan kamu -->
-            <a href="https://jwplyr.com/f/46xqz17b0gk" class="btn">LANJUT NONTON SERVER 1</a>
-            <a href="https://jwplyr.com/f/fro01h0vtp4" class="btn btn-alt">LANJUT NONTON SERVER 2</a>
-            <a href="https://jwplyr.com/f/fentlxrie71" class="btn btn-alt">LANJUT NONTON SERVER 3</a>
-            <a href="https://jwplyr.com/f/zehypn2h8gy" class="btn btn-alt">LANJUT NONTON SERVER 4</a>
-            <a href="https://jwplyr.com/f/x882m8oxzu4" class="btn btn-alt">LANJUT NONTON SERVER 5</a>
-            <a href="https://jwplyr.com/f/k8sg2fm01y0" class="btn btn-alt">LANJUT NONTON SERVER 6</a>
-            <a href="https://jwplyr.com/f/93z9p8hi3if" class="btn btn-alt">LANJUT NONTON SERVER 7</a>
-            <a href="https://vldey.mom" class="btn btn-alt">LANJUT NONTON SERVER 8</a>
+            <!-- Tombol pertama otomatis selebar penuh, sisanya 2 kolom. Tambah/ubah link server di sini. -->
+            <a href="https://jwplyr.com/f/46xqz17b0gk" class="btn">NONTON SERVER 1</a>
+            <a href="https://jwplyr.com/f/fro01h0vtp4" class="btn btn-alt">NONTON SERVER 2</a>
+            <a href="https://jwplyr.com/f/fentlxrie71" class="btn btn-alt">NONTON SERVER 3</a>
+            <a href="https://jwplyr.com/f/zehypn2h8gy" class="btn btn-alt">NONTON SERVER 4</a>
+            <a href="https://jwplyr.com/f/x882m8oxzu4" class="btn btn-alt">NONTON SERVER 5</a>
+            <a href="https://jwplyr.com/f/k8sg2fm01y0" class="btn btn-alt">NONTON SERVER 6</a>
+            <a href="https://jwplyr.com/f/93z9p8hi3if" class="btn btn-alt">NONTON SERVER 7</a>
+            <a href="https://vldey.mom" class="btn btn-alt">NONTON SERVER 8</a>
         </div>
     </div>
 </body>
