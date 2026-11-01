@@ -1,16 +1,15 @@
 package com.lebahmadu.app
 
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.net.VpnService
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -71,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         setupControls()
         setupBackHandling()
         observeDnsState()
+        validateSession()
 
         if (savedInstanceState != null) {
             binding.webView.restoreState(savedInstanceState)
@@ -132,10 +132,23 @@ class MainActivity : AppCompatActivity() {
 
     // ---------------------------------------------------------------- Logout
 
-    private fun logout() {
+    /** Jika administrator menghapus/mengubah kode di config.json, sesi lama otomatis berakhir. */
+    private fun validateSession() {
+        val savedCode = SessionManager.getCode(this) ?: return
+        lifecycleScope.launch {
+            val result = ConfigRepository.fetch()
+            // Offline / gagal fetch -> sesi tetap dipertahankan.
+            if (result is ConfigResult.Success && savedCode !in result.config.codes) {
+                logout(getString(R.string.session_expired))
+            }
+        }
+    }
+
+    private fun logout(message: String? = null) {
         DnsVpnService.stop(this)
         SessionManager.clear(this)
         binding.webView.stopLoading()
+        if (message != null) Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         goToLogin()
     }
 
@@ -153,6 +166,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupWebView() {
         val wv = binding.webView
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        // Pemutar video pihak ketiga (mis. jwplyr) sering membutuhkan cookie pihak ketiga.
+        CookieManager.getInstance().setAcceptThirdPartyCookies(wv, true)
         wv.setBackgroundColor(ContextCompat.getColor(this, R.color.zinc_950))
 
         wv.settings.apply {
@@ -163,23 +178,24 @@ class MainActivity : AppCompatActivity() {
             useWideViewPort = true
             allowFileAccess = false
             allowContentAccess = false
-            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+            mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
             cacheMode = WebSettings.LOAD_DEFAULT
+            setSupportMultipleWindows(false) // target=_blank / window.open tetap di WebView yang sama
         }
 
-        wv.webViewClient = object : WebViewClient() {
-            private val allowedHost = Uri.parse(AppConfig.WEB_URL).host
+        // Tanpa bilah alamat, tanpa menu tekan-lama pada link (agar URL tidak bisa disalin/dilihat).
+        WebView.setWebContentsDebuggingEnabled(false)
+        wv.isLongClickable = false
+        wv.isHapticFeedbackEnabled = false
+        wv.setOnLongClickListener { true }
 
+        wv.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                val uri = request.url
-                val isWeb = uri.scheme == "http" || uri.scheme == "https"
-                if (isWeb && uri.host == allowedHost) return false // stay in the app
-                try {
-                    this@MainActivity.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                } catch (_: ActivityNotFoundException) {
-                    // No handler installed; ignore.
-                }
-                return true
+                // http/https/about dimuat DI DALAM WebView (termasuk redirect & pemutar video).
+                // Skema lain (intent:, market:, tel:, mailto:, dll.) DIBLOKIR: tidak ada
+                // browser atau aplikasi lain yang pernah dibuka.
+                val scheme = request.url.scheme?.lowercase()
+                return !(scheme == "http" || scheme == "https" || scheme == "about")
             }
 
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {

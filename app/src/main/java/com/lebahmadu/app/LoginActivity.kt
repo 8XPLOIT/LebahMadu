@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     when {
                         !config.loginEnabled -> toast(getString(R.string.login_disabled))
                         code in config.codes -> {
-                            SessionManager.saveSession(this@LoginActivity)
+                            SessionManager.saveSession(this@LoginActivity, code)
                             openMain()
                         }
                         else -> binding.tilCode.error = getString(R.string.login_invalid)

@@ -94,7 +94,7 @@ class DnsVpnService : VpnService() {
         if (tun != null) return
         try {
             val pfd = Builder()
-                .setSession("Lebah Madu Private DNS")
+                .setSession("Lebah Madu DNS Pribadi")
                 .setMtu(MTU)
                 .addAddress(VPN_ADDRESS, 24)
                 .addDnsServer(VIRTUAL_DNS)
@@ -127,7 +127,7 @@ class DnsVpnService : VpnService() {
         executor = null
         try {
             tun?.close()
-        } catch (_: IOException) {
+        } catch (e: IOException) {
         }
         tun = null
     }
@@ -181,7 +181,7 @@ class DnsVpnService : VpnService() {
                     }
                 }
             }
-        } catch (_: RejectedExecutionException) {
+        } catch (e: RejectedExecutionException) {
             // Service is shutting down.
         }
     }

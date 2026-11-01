@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lebah Madu</string>
-    <string name="login_subtitle">Enter your login code to continue</string>
-    <string name="login_hint">Login Code</string>
-    <string name="login_submit">Submit</string>
-    <string name="login_empty">Please enter your login code</string>
-    <string name="login_invalid">Invalid login code</string>
-    <string name="login_disabled">Login is currently disabled by Administrator</string>
-    <string name="err_no_internet">No internet connection. Please check your network and try again.</string>
-    <string name="err_timeout">Connection timed out. Please try again.</string>
-    <string name="err_network">Network error. Please try again.</string>
-    <string name="err_server">Server error (HTTP %1$d). Please try again later.</string>
-    <string name="err_config">Invalid configuration received from the server.</string>
-    <string name="dns_on">Private DNS: ON</string>
-    <string name="dns_off">Private DNS: OFF</string>
+    <string name="login_subtitle">Masukkan kode login untuk melanjutkan</string>
+    <string name="login_hint">Kode Login</string>
+    <string name="login_submit">Masuk</string>
+    <string name="login_empty">Silakan masukkan kode login</string>
+    <string name="login_invalid">Kode login tidak valid</string>
+    <string name="login_disabled">Login sedang dinonaktifkan oleh Administrator</string>
+    <string name="session_expired">Kode login sudah tidak berlaku. Silakan login kembali.</string>
+    <string name="err_no_internet">Tidak ada koneksi internet. Periksa jaringan Anda lalu coba lagi.</string>
+    <string name="err_timeout">Koneksi habis waktu. Silakan coba lagi.</string>
+    <string name="err_network">Terjadi kesalahan jaringan. Silakan coba lagi.</string>
+    <string name="err_server">Kesalahan server (HTTP %1$d). Coba lagi nanti.</string>
+    <string name="err_config">Konfigurasi dari server tidak valid.</string>
+    <string name="dns_on">DNS Pribadi: AKTIF</string>
+    <string name="dns_off">DNS Pribadi: MATI</string>
     <string name="logout">Logout</string>
-    <string name="vpn_permission_denied">VPN permission is required to enable Private DNS.</string>
-    <string name="web_error">Can\'t reach the page. Check your connection.</string>
-    <string name="retry">Retry</string>
+    <string name="vpn_permission_denied">Izin VPN diperlukan untuk mengaktifkan DNS Pribadi.</string>
+    <string name="web_error">Halaman tidak dapat dimuat. Periksa koneksi Anda.</string>
+    <string name="retry">Coba Lagi</string>
 </resources>

@@ -18,8 +18,10 @@
             android:layout_height="wrap_content"
             android:background="@color/zinc_900"
             android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="6dp">
+            android:paddingStart="8dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="6dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDns"
