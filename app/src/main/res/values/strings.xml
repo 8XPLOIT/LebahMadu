@@ -3,7 +3,7 @@
     <string name="app_name">Lebah Madu</string>
     <string name="login_subtitle">Masukkan kode login untuk melanjutkan!</string>
     <string name="login_hint">Ketik kode login anda</string>
-    <string name="login_submit">MASUK</string>
+    <string name="login_submit">L O G I N</string>
     <string name="login_warning">Peringatan Sangat Keras : Pastikan Umur Anda Sudah Diatas 18+ Untuk Melanjutkan!</string>
     <string name="footer_credit">Powered by 8XPLOIT</string>
     <string name="login_empty">Silakan masukkan kode login</string>
@@ -26,11 +26,11 @@
     <string name="notif_title">Lebah Madu aktif bosku!</string>
     <string name="notif_text">VPN sedang aktif. Ketuk Matikan untuk menonaktifkan.</string>
     <string name="notif_action_stop">Matikan</string>
-    <string name="login_buy_prefix">Belum punya kode login? </string>
-    <string name="login_buy_link"> Beli Lisensi DISINI.</string>
+    <string name="login_buy_prefix">Belum punya kode login?</string>
+    <string name="login_buy_link">Beli Lisensi DISINI.</string>
     <string name="login_buy_url" translatable="false">http://lynk.id/nemospiritgeek/yzkn3dy9nm45</string>
     <string name="login_badge">APK 18+</string>
     <string name="feature_videos">1000+ Video Streaming</string>
-    <string name="feature_dns">Dilengkapi DNS Pemblokir Iklan</string>
-    <string name="feature_noads">Nonton Video 18+ Tanpa Iklan</string>
+    <string name="feature_dns">DNS Pemblokir Iklan</string>
+    <string name="feature_noads">Video 18+ Tanpa Batas</string>
 </resources>
