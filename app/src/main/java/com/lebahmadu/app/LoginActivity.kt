@@ -41,6 +41,9 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Already logged in -> skip the login screen.
+        if (SessionManager.isLoggedIn(this) && SessionManager.isExpiredOffline(this)) {
+            SessionManager.clear(this)
+        }
         if (SessionManager.isLoggedIn(this)) {
             openMain()
             return
@@ -140,8 +143,8 @@ class LoginActivity : AppCompatActivity() {
                 val config = result.config
                 if (!config.loginEnabled) {
                     toast(getString(R.string.login_disabled))
-                } else if (code in config.codes) {
-                    SessionManager.saveSession(this, code)
+                } else if (config.isActive(code) == true) {
+                    SessionManager.saveSession(this, code, config.codes[code])
                     openMain()
                 } else {
                     binding.tilCode.error = getString(R.string.login_invalid)

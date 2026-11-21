@@ -14,13 +14,32 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 /**
- * Expected config.json:
+ * Format config.json:
  * {
  *   "login_enabled": true,
- *   "codes": ["HONEY-1234", "HONEY-5678"]
+ *   "codes": [
+ *     { "code": "n3m0", "mulai": "21/11/2026", "bulan": 1 },   // aktif 30 hari x bulan sejak "mulai"
+ *     { "code": "yon",  "expired": "31/12/2099" },             // aktif sampai akhir tanggal ini
+ *     "hardi"                                                  // tanpa batas waktu
+ *   ]
  * }
+ * Semua tanggal format DD/MM/YYYY (contoh 31/12/2099), zona waktu WIB (Asia/Jakarta).
+ * Format lama YYYY-MM-DD masih diterima supaya config lama tidak rusak.
+ * Waktu "sekarang" diambil dari header Date server, jadi mundurkan jam HP tidak berguna.
  */
-data class RemoteConfig(val loginEnabled: Boolean, val codes: Set<String>)
+data class RemoteConfig(
+    val loginEnabled: Boolean,
+    /** kode -> waktu habis (epoch ms), null = tanpa batas. */
+    val codes: Map<String, Long?>,
+    val serverTimeMs: Long
+) {
+    /** null = kode tidak ada; false = expired; true = aktif. */
+    fun isActive(code: String): Boolean? {
+        if (!codes.containsKey(code)) return null
+        val exp = codes[code] ?: return true
+        return serverTimeMs < exp
+    }
+}
 
 enum class ConfigError { NO_INTERNET, TIMEOUT, NETWORK, SERVER, BAD_CONFIG }
 
@@ -53,7 +72,9 @@ object ConfigRepository {
                     ConfigResult.Failure(ConfigError.SERVER, response.code)
                 } else {
                     val body = response.body?.string().orEmpty()
-                    ConfigResult.Success(parse(body))
+                    val serverTime = response.headers.getDate("Date")?.time
+                        ?: System.currentTimeMillis()
+                    ConfigResult.Success(parse(body, serverTime))
                 }
             }
         } catch (e: UnknownHostException) {
@@ -64,18 +85,37 @@ object ConfigRepository {
             ConfigResult.Failure(ConfigError.NETWORK)
         } catch (e: JSONException) {
             ConfigResult.Failure(ConfigError.BAD_CONFIG)
+        } catch (e: IllegalArgumentException) {
+            ConfigResult.Failure(ConfigError.BAD_CONFIG)
         }
     }
 
-    private fun parse(raw: String): RemoteConfig {
+    private val DAY_MS = 24L * 60 * 60 * 1000
+
+    private fun parse(raw: String, serverTime: Long): RemoteConfig {
         val json = JSONObject(raw)
         val enabled = json.getBoolean("login_enabled")
         val array = json.optJSONArray("codes") ?: JSONArray()
-        val codes = mutableSetOf<String>()
+        val codes = mutableMapOf<String, Long?>()
         for (i in 0 until array.length()) {
-            val code = array.optString(i).trim()
-            if (code.isNotEmpty()) codes.add(code)
+            val item = array.get(i)
+            if (item is JSONObject) {
+                val code = item.optString("code").trim()
+                if (code.isEmpty()) continue
+                val expiry: Long? = when {
+                    item.has("expired") -> ExpiryDate.parse(item.getString("expired")) + DAY_MS
+                    item.has("mulai") -> {
+                        val bulan = item.optInt("bulan", 1).coerceAtLeast(0)
+                        ExpiryDate.parse(item.getString("mulai")) + bulan * 30L * DAY_MS
+                    }
+                    else -> null
+                }
+                codes[code] = expiry
+            } else {
+                val code = item.toString().trim()
+                if (code.isNotEmpty()) codes[code] = null
+            }
         }
-        return RemoteConfig(enabled, codes)
+        return RemoteConfig(enabled, codes, serverTime)
     }
 }

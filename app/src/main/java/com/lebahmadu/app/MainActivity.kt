@@ -170,8 +170,15 @@ class MainActivity : AppCompatActivity() {
         val savedCode = SessionManager.getCode(this) ?: return
         lifecycleScope.launch {
             val result = ConfigRepository.fetch()
-            // Offline / gagal fetch -> sesi tetap dipertahankan.
-            if (result is ConfigResult.Success && savedCode !in result.config.codes) {
+            if (result is ConfigResult.Success) {
+                if (result.config.isActive(savedCode) != true) {
+                    logout(getString(R.string.session_expired))
+                } else {
+                    // Simpan tanggal habis terbaru (misal admin memperpanjang).
+                    SessionManager.saveSession(this@MainActivity, savedCode, result.config.codes[savedCode])
+                }
+            } else if (SessionManager.isExpiredOffline(this@MainActivity)) {
+                // Offline: cek pakai tanggal habis yang tersimpan.
                 logout(getString(R.string.session_expired))
             }
         }
@@ -326,7 +333,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (::binding.isInitialized) binding.webView.onResume()
+        if (::binding.isInitialized) {
+            binding.webView.onResume()
+            validateSession()
+        }
     }
 
     override fun onPause() {

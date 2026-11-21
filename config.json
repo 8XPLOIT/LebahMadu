@@ -1,4 +1,9 @@
 {
   "login_enabled": true,
-  "codes": ["n3m0", "yon", "hardi", "afgo", "rojale"]
+  "codes": [
+    { "code": "n3m0",  "expired": "21/11/2026" },
+    { "code": "yon",   "expired": "30/11/2026" },
+    { "code": "hardi", "expired": "30/11/2026" },
+    { "code": "afgo",  "expired": "30/11/2026" }
+  ]
 }
