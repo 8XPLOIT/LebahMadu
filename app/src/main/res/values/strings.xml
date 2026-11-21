@@ -23,11 +23,11 @@
     <string name="web_error">Halaman tidak dapat dimuat. Periksa koneksi Anda.</string>
     <string name="retry">Coba Lagi</string>
     <string name="notif_channel_name">Status Lebah Madu</string>
-    <string name="notif_title">Lebah Madu aktif bosku!</string>
-    <string name="notif_text">VPN sedang aktif. Ketuk Matikan untuk menonaktifkan.</string>
+    <string name="notif_title">VPN Aktif Bosku!</string>
+    <string name="notif_text">Ketuk Matikan untuk menonaktifkan.</string>
     <string name="notif_action_stop">Matikan</string>
     <string name="login_buy_prefix">Belum punya kode login?</string>
-    <string name="login_buy_link">Beli Lisensi DISINI.</string>
+    <string name="login_buy_link"> Beli Lisensi DISINI.</string>
     <string name="login_buy_url" translatable="false">http://lynk.id/nemospiritgeek/yzkn3dy9nm45</string>
     <string name="login_badge">APK 18+</string>
     <string name="feature_videos">1000+ Video Streaming</string>
