@@ -1,11 +1,12 @@
 {
   "login_enabled": true,
   "codes": [
-    { "code": "n3m0",  "expired": "21/11/2026" },
+    { "code": "n3m0",  "expired": "31/12/2026" },
     { "code": "yon",   "expired": "30/11/2026" },
     { "code": "rojale",   "expired": "30/11/2026" },
     { "code": "hardi", "expired": "30/11/2026" },
     { "code": "gilang", "expired": "30/11/2026" },
-    { "code": "afgo",  "expired": "30/11/2026" }
+    { "code": "afgo", "expired": "30/11/2026" },
+    { "code": "tes666",  "expired": "25/11/2026" }
   ]
 }
