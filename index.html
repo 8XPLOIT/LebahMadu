@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content='d587ffd5e8166a77f78649f499ff04fa' name='p:domain_verify'/>
     <title>LEBAH MADU UI</title>
-    <!-- Pengalihan otomatis dalam 30 detik -->
-    <meta http-equiv="refresh" content="30; url=https://jwplyr.com/f/46xqz17b0gk">
     <style>
         * {
             -webkit-tap-highlight-color: transparent;
@@ -121,22 +119,18 @@
             transform: scale(0.97);
         }
 
-        /* Kelompok tombol: 2 kolom supaya lebih pendek, tombol pertama selebar penuh */
+        /* Kelompok tombol: baris atas 2, tengah 3 per baris, baris bawah 2 */
         .btn-group {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 0.5rem;
         }
-
-        .btn-group a.btn:first-child {
-            grid-column: 1 / -1;
+        .btn-group a.btn { grid-column: span 2; }
+        .btn-group a.btn:nth-child(-n+2),
+        .btn-group a.btn:nth-last-child(-n+2) {
+            grid-column: span 3;
             min-height: 2.75rem;
             font-size: clamp(0.78rem, 3.6vw, 0.95rem);
-        }
-
-        /* Jika jumlah tombol genap, tombol terakhir yang sendirian dibuat selebar penuh */
-        .btn-group a.btn:last-child:nth-child(even) {
-            grid-column: 1 / -1;
         }
 
         /* Tombol cadangan: kaca transparan dengan garis merah */
@@ -144,32 +138,150 @@
             background-color: rgba(220, 38, 38, 0.12);
             border: 1px solid rgba(220, 38, 38, 0.6);
         }
+        a.btn.btn-alt:hover { background-color: rgba(220, 38, 38, 0.35); }
 
-        a.btn.btn-alt:hover {
-            background-color: rgba(220, 38, 38, 0.35);
+        /* Desktop/tablet: kartu sedikit lebih lebar, ukuran teks tetap */
+        @media (min-width: 640px) {
+            .glass-container { max-width: 480px; }
+            a.btn { font-size: 0.875rem; }
+            .btn-group a.btn:nth-child(-n+2),
+            .btn-group a.btn:nth-last-child(-n+2) { font-size: 0.95rem; }
         }
 
-        /* Layar sangat kecil: tombol jadi 1 kolom penuh agar teks tidak terpotong */
+        /* Layar sangat kecil: semua tombol 2 kolom agar teks tidak terpotong */
         @media (max-width: 300px) {
-            .btn-group {
-                grid-template-columns: minmax(0, 1fr);
-            }
+            .btn-group a.btn { grid-column: span 3; }
         }
 
-        /* Loading Spinner Sederhana */
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 10px solid rgba(255,255,255,0.3);
+        /* ====== TEROWONGAN ANONIM (pengganti spinner) ====== */
+        .tunnel {
+            position: relative;
+            width: 100%;
+            height: clamp(96px, 28vw, 132px);
+            margin: 0 auto 1.1rem auto;
+            perspective: 240px;
+            perspective-origin: 50% 50%;
+            overflow: hidden;
+            border-radius: 0.9rem;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(220, 38, 38, 0.22), rgba(9, 9, 11, 0) 68%),
+                rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .tunnel-stage {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+        }
+
+        /* Cincin terowongan yang terbang ke arah mata */
+        .tunnel-ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 132px;
+            height: 132px;
+            margin: -66px 0 0 -66px;
+            border: 2px solid rgba(220, 38, 38, 0.85);
+            border-radius: 26%;
+            box-shadow: 0 0 14px rgba(220, 38, 38, 0.45), inset 0 0 14px rgba(220, 38, 38, 0.3);
+            opacity: 0;
+            animation: ring-fly 3.2s linear infinite;
+        }
+        .tunnel-ring:nth-child(1) { animation-delay: 0s; }
+        .tunnel-ring:nth-child(2) { animation-delay: -0.45s; }
+        .tunnel-ring:nth-child(3) { animation-delay: -0.9s; }
+        .tunnel-ring:nth-child(4) { animation-delay: -1.35s; }
+        .tunnel-ring:nth-child(5) { animation-delay: -1.8s; }
+        .tunnel-ring:nth-child(6) { animation-delay: -2.25s; }
+        .tunnel-ring:nth-child(7) { animation-delay: -2.7s; }
+
+        @keyframes ring-fly {
+            0%   { transform: translateZ(-520px) rotate(0deg);   opacity: 0; }
+            18%  { opacity: 0.95; }
+            82%  { opacity: 0.8; }
+            100% { transform: translateZ(150px) rotate(22deg);   opacity: 0; }
+        }
+
+        /* Garis cahaya (warp) yang melesat di dinding terowongan */
+        .tunnel-streak {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 2px;
+            height: 38px;
+            margin: -19px 0 0 -1px;
+            border-radius: 2px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+            opacity: 0;
+            transform: rotate(var(--rot)) translateY(var(--rad)) translateZ(-500px);
+            animation: streak-fly 2.4s linear infinite;
+        }
+        .tunnel-streak:nth-child(8) { --rot: 18deg;  --rad: 46px; animation-delay: -0.1s; }
+        .tunnel-streak:nth-child(9) { --rot: 72deg;  --rad: 58px; animation-delay: -0.7s; }
+        .tunnel-streak:nth-child(10){ --rot: 126deg; --rad: 40px; animation-delay: -1.3s; }
+        .tunnel-streak:nth-child(11){ --rot: 170deg; --rad: 62px; animation-delay: -1.9s; }
+        .tunnel-streak:nth-child(12){ --rot: 212deg; --rad: 44px; animation-delay: -0.4s; }
+        .tunnel-streak:nth-child(13){ --rot: 268deg; --rad: 56px; animation-delay: -1.0s; }
+        .tunnel-streak:nth-child(14){ --rot: 312deg; --rad: 48px; animation-delay: -1.6s; }
+        .tunnel-streak:nth-child(15){ --rot: 340deg; --rad: 60px; animation-delay: -2.1s; }
+
+        @keyframes streak-fly {
+            0%   { transform: rotate(var(--rot)) translateY(var(--rad)) translateZ(-500px); opacity: 0; }
+            22%  { opacity: 0.85; }
+            100% { transform: rotate(var(--rot)) translateY(var(--rad)) translateZ(150px);  opacity: 0; }
+        }
+
+        /* Gembok anonimitas di mulut terowongan */
+        .tunnel-lock {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 34px;
+            height: 34px;
+            margin: -17px 0 0 -17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin: 0 auto 1rem auto;
+            background: rgba(9, 9, 11, 0.72);
+            border: 1px solid rgba(220, 38, 38, 0.55);
+            box-shadow: 0 0 18px rgba(220, 38, 38, 0.45);
+        }
+        .tunnel-lock svg { width: 17px; height: 17px; display: block; }
+        .tunnel-lock::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            animation: lock-pulse 2.2s ease-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes lock-pulse {
+            0%   { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.9); opacity: 0; }
         }
+
+        /* Hormati pengaturan hemat gerak di HP/desktop */
+        @media (prefers-reduced-motion: reduce) {
+            .tunnel-ring, .tunnel-streak, .tunnel-lock::after { animation: none; }
+            .tunnel-ring { opacity: 0.5; }
+            .tunnel-ring:nth-child(1) { transform: translateZ(-60px); }
+            .tunnel-ring:nth-child(2) { transform: translateZ(-180px); }
+            .tunnel-ring:nth-child(3) { transform: translateZ(-320px); }
+            .tunnel-ring:nth-child(4),
+            .tunnel-ring:nth-child(5),
+            .tunnel-ring:nth-child(6),
+            .tunnel-ring:nth-child(7) { opacity: 0; }
+            .tunnel-streak { opacity: 0.35; }
+            .tunnel-lock::after { opacity: 0; }
+        }
+
+        /* Tombol chat Intergram selalu di atas kartu kaca */
+        #intergramRoot, #intergramRoot > div { z-index: 2147483000 !important; }
     </style>
 </head>
 <body>
@@ -179,11 +291,36 @@
 
     <!-- Kontainer Utama -->
     <div class="glass-container">
-        <div class="spinner"></div>
-        <h2>LOGIN SUKSES ✓</h2>
-        <p>Sekarang <b>aktifkan tombol VPN di kiri atas</b> supaya tidak ada iklan. <b>Klik salah satu server</b> di bawah, atau Anda akan dialihkan otomatis ke server 1 dalam beberapa detik!</p>
+        <div class="tunnel" aria-hidden="true">
+            <div class="tunnel-stage">
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-ring"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+                <span class="tunnel-streak"></span>
+            </div>
+            <div class="tunnel-lock">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"></rect>
+                    <path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"></path>
+                    <circle cx="12" cy="15.6" r="1.3" fill="#fca5a5" stroke="none"></circle>
+                </svg>
+            </div>
+        </div>
+        <h2>SELAMAT DATANG</h2>
+        <p>Sekarang <b>aktifkan tombol VPN di kiri atas</b> supaya tidak ada iklan. <b>Klik salah satu server</b> di bawah ini!</p>
         <div class="btn-group">
-            <!-- Tombol pertama otomatis selebar penuh, sisanya 2 kolom. Tambah/ubah link server di sini. -->
+            <!-- 2 tombol teratas & 2 terbawah lebih lebar, sisanya 3 per baris. Ubah link server di sini. -->
             <a href="https://jwplyr.com/f/46xqz17b0gk" class="btn">SERVER 1</a>
             <a href="https://jwplyr.com/f/fro01h0vtp4" class="btn">SERVER 2</a>
             <a href="https://jwplyr.com/f/fentlxrie71" class="btn">SERVER 3</a>
@@ -202,5 +339,23 @@
             <a href="https://vldey.mom" class="btn">SERVER 16</a>
         </div>
     </div>
+
+    <!--Start of Telegram Script (Intergram)-->
+    <script>
+        window.intergramId = "302525357";
+        window.intergramCustomizations = {
+            titleClosed: 'Mau kirim pesan dan saran ke Admin Lebah?',
+            titleOpen: 'Chat Admin Lebah',
+            introMessage: 'Selamat datang di Obrolan Langsung dengan Admin Lebah! Anda akan terhubung langsung dengan Admin. Silahkan ketik Nama dan Pesan Anda pada kolom yang telah tersedia di bagian bawah! Kirim pesan menggunakan tombol Enter di keyboardmu!',
+            autoResponse: 'Pesan telah terkirim! ' +
+                            'Mohon menunggu, jangan menutup Menu Obrolan ini 😊',
+            autoNoResponse: 'Jika Pesan ini muncul berarti Admin Lebah belum cek HP atau belum Online kembali, silahkan tinggalkan obrolan ini. ' +
+                            'Hubungi WhatsApp di 082339800565 ya 😊🙏',
+            mainColor: "#FF0000",
+            alwaysUseFloatingButton: true
+        };
+    </script>
+    <script id="intergram" type="text/javascript" src="https://www.intergram.xyz/js/widget.js"></script>
+    <!--End of Telegram Script-->
 </body>
 </html>
